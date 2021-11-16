@@ -63,6 +63,6 @@ app.use('/hashtag', hashtagRouter);
 //   res.send(err);
 // });
 
-app.listen(3065, () => {
+app.listen(80, () => {
   console.log('서버 실행 중..');
 });
