@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "state": "node app.js"
+    "start": "node app.js"
   },
   "author": "JW",
   "license": "MIT",
