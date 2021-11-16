@@ -50,13 +50,13 @@ const About = () => {
 };
 
 // 화면 내용이 잘 안바뀌는 페이지에 적용하면 빌드할때 next에서 정적인 html파일로 렌더링해준다.(getStaticProps)
-export const getStaticProps = wrapper.getStaticProps(async (context) => {
-  context.store.dispatch({
-    type: LOAD_USER_REQUEST,
-    data: 1,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-});
+// export const getStaticProps = wrapper.getStaticProps(async (context) => {
+//   context.store.dispatch({
+//     type: LOAD_USER_REQUEST,
+//     data: 1,
+//   });
+//   context.store.dispatch(END);
+//   await context.store.sagaTask.toPromise();
+// });
 
 export default About;
