@@ -152,7 +152,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
 
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => { // POST /post/images
   try {
-    res.status(200).json(req.files.map((v) => v.location));
+    res.status(200).json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
   } catch (error) {
     console.error(error);
     next(error);
