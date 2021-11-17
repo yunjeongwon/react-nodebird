@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 const { Post, Image, Comment, User, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
@@ -15,16 +17,19 @@ try {
   fs.mkdirSync('uploads');
 }
 
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
+});
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination (req, file, cb) {
-      cb(null, 'uploads');
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'nodebird4',
+    key: (req, file, cb) => {
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
     },
-    filename (req, file, cb) {
-      const ext = path.extname(file.originalname); // 확장자 추출(.png)
-      const basename = path.basename(file.originalname, ext); // 파일이름
-      cb(null, basename + '_' + new Date().getTime() + ext ); // 파일이름4156486489.png
-    }
   }),
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
@@ -147,7 +152,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
 
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => { // POST /post/images
   try {
-    res.status(200).json(req.files.map((v) => v.filename));
+    res.status(200).json(req.files.map((v) => v.location));
   } catch (error) {
     console.error(error);
     next(error);
