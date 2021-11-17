@@ -8,7 +8,7 @@ exports.handler = async (event, context, callback) => {
   const Key = decodeURIComponent(event.Records[0].s3.object.key); // original/123123_abc.png
   console.log('Bucket', Bucket, 'Key', Key);
   const filename = Key.split('/')[Key.split('/').length - 1]; // 123123_abc.png
-  const ext = filename.split('.')[Key.split('.').length - 1].toLowerCase(); // png
+  const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase(); // png
   const requiredFormat = ext === 'jpg' ? 'jpeg' : ext;
   console.log('filename', filename, 'ext', ext);
 
