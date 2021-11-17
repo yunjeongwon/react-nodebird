@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({
-  origin: ['http://localhost:3060', 'http://nodebirdjw.shop', 'http://3.36.88.160'], // true면 요청하는 주소에서 cors 방지, // Access-Control-Allow-Origin
+  origin: ['http://localhost:3060', 'http://nodebirdjw.shop', 'http://15.165.66.74'], // true면 요청하는 주소에서 cors 방지, // Access-Control-Allow-Origin
   credentials: true,// 쿠키 전달: true, // Access-Control-Allow-Credential
 })); 
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // http://localhost:3065/
