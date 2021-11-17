@@ -28,14 +28,18 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  app.use(cors({
+    origin: 'http://nodebirdjw.shop',
+    credentials: true,
+  })); 
 } else {
   app.use(morgan('dev'));
+  app.use(cors({
+    origin: true,
+    credentials: true,
+  })); 
 }
 
-app.use(cors({
-  origin: ['http://localhost:3060', 'http://nodebirdjw.shop', 'http://15.165.66.74'], // true면 요청하는 주소에서 cors 방지, // Access-Control-Allow-Origin
-  credentials: true,// 쿠키 전달: true, // Access-Control-Allow-Credential
-})); 
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // http://localhost:3065/
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
