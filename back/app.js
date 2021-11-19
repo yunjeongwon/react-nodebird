@@ -62,6 +62,10 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/hashtag', hashtagRouter);
 
+app.get('/', (req, res) => {
+  return res.send('server is successfully connected');
+});
+
 app.listen(80, () => {
-  console.log('서버 실행 중..');
+  return console.log('서버 실행 중..');
 });
