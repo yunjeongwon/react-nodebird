@@ -62,16 +62,6 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/hashtag', hashtagRouter);
 
-// app.use((req, res, next) => {
-//   const error = new Error();
-//   error.status = 404;
-//   next(error);
-// });
-
-// app.use((err, req, res, next) => {
-//   res.send(err);
-// });
-
 app.listen(80, () => {
   console.log('서버 실행 중..');
 });
