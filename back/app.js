@@ -66,6 +66,6 @@ app.get('/', (req, res) => {
   return res.send('server is successfully connected');
 });
 
-app.listen(80, () => {
+app.listen(3060, () => {
   return console.log('서버 실행 중..');
 });
