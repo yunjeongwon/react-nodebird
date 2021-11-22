@@ -14,7 +14,7 @@ import wrapper from '../../store/configureStore';
 
 const User = () => {
   const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo, me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
   const router = useRouter();
   const { id } = router.query;
@@ -46,25 +46,31 @@ const User = () => {
 
   return (
     <AppLayout>
-      <Head>
-        <title>{userInfo?.nickname} 님의 글 | Nodebird</title>
-        <meta name="description" content={`${userInfo?.nickname}님의 게시글`} />
-        <meta property="og:title" content={`${userInfo?.nickname}님의 게시글`} />
-        <meta property="og:description" content={`${userInfo?.nickname}님의 게시글`} />
-        <meta property="og:image" content="http://nodebirdjw.shop/favicon.ico" />
-        <meta property="og:url" content={`http://nodebirdjw.shop/user/${id}`} />
-      </Head>
-      <Card actions={[
-        <div key="twit">짹짹<br />{userInfo?.Posts}</div>,
-        <div key="followings">팔로윙<br />{userInfo?.Followings}</div>,
-        <div key="followers">팔로워<br />{userInfo?.Followers}</div>,
-      ]}
-      >
-        <Card.Meta
-          avatar={<Avatar>{userInfo?.nickname[0]}</Avatar>}
-          title={userInfo?.nickname}
-        />
-      </Card>
+      {userInfo && (
+        <Head>
+          <title>{userInfo.nickname} 님의 글 | Nodebird</title>
+          <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
+          <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
+          <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
+          <meta property="og:image" content="http://nodebirdjw.shop/favicon.ico" />
+          <meta property="og:url" content={`http://nodebirdjw.shop/user/${id}`} />
+        </Head>
+      )}
+
+      {userInfo && (userInfo.id !== me?.id) && (
+        <Card actions={[
+          <div key="twit">짹짹<br />{userInfo.Posts}</div>,
+          <div key="followings">팔로윙<br />{userInfo.Followings}</div>,
+          <div key="followers">팔로워<br />{userInfo.Followers}</div>,
+        ]}
+        >
+          <Card.Meta
+            avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
+            title={userInfo.nickname}
+          />
+        </Card>
+      )}
+
       {mainPosts?.map((v) => (
         <PostCard key={v.id} post={v} />
       ))}

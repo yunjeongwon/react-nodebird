@@ -82,13 +82,13 @@ const PostCard = ({ post }) => {
                 { id && post.User.id === id
                   ? (
                     <>
-                      <Button>수정</Button>
+                      {!post.RetweetId && <Button>수정</Button>}
                       <Button type="danger" onClick={onRemovePost} loading={removePostLoading}>삭제</Button>
                     </>
                   )
                   : <Button>신고</Button>}
               </Button.Group>
-          )}
+            )}
           >
             <EllipsisOutlined />
           </Popover>,
@@ -104,7 +104,7 @@ const PostCard = ({ post }) => {
               <div style={{ float: 'right' }}>{moment(post.createdAt).startOf('hour').fromNow()}</div>
               <Card.Meta
                 avatar={(
-                  <Link href={`/user/${post.Retweet.UserId}`}>
+                  <Link href={`/user/${post.Retweet.UserId}`} prefetch={false}>
                     <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
                   </Link>
                 )}
@@ -118,7 +118,7 @@ const PostCard = ({ post }) => {
               <div style={{ float: 'right' }}>{moment(post.createdAt).startOf('hour').fromNow()}</div>
               <Card.Meta
                 avatar={(
-                  <Link href={`/user/${post.UserId}`}>
+                  <Link href={`/user/${post.UserId}`} prefetch={false}>
                     <a><Avatar>{post.User.nickname[0]}</Avatar></a>
                   </Link>
                 )}
@@ -141,7 +141,7 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.User.nickname}
                   avatar={(
-                    <Link href={`/user/${item.UserId}`}>
+                    <Link href={`/user/${item.UserId}`} prefetch={false}>
                       <a><Avatar>{item.User.nickname[0]}</Avatar></a>
                     </Link>
                   )}
