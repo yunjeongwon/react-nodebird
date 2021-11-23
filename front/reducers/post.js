@@ -106,6 +106,7 @@ const reducer = (state = initialState, action) => (
         draft.updatePostError = null;
         break;
       case UPDATE_POST_SUCCESS:
+        draft.mainPosts.find((v) => action.data.PostId === v.id).content = action.data.content;
         draft.updatePostLoading = false;
         draft.updatePostDone = true;
         break;

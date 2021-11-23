@@ -9,7 +9,7 @@ import moment from 'moment';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST, UPDATE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 
 moment.locale('ko');
@@ -20,6 +20,7 @@ const PostCard = ({ post }) => {
   const { removePostLoading } = useSelector((state) => state.post);
   const [commentFromOpened, setCommentFromOpened] = useState(false);
   const liked = post.Likers.find((v) => v.id === id);
+  const [editMode, setEditMode] = useState(false);
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -65,6 +66,21 @@ const PostCard = ({ post }) => {
     });
   }, [id]);
 
+  const onClickUpdate = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
+  const onCancelUpdatePost = useCallback(() => {
+    setEditMode(false);
+  }, []);
+
+  const onChangePost = useCallback((editText) => () => {
+    dispatch({
+      type: UPDATE_POST_REQUEST,
+      data: { PostId: post.id, content: editText },
+    });
+  }, []);
+
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
@@ -82,7 +98,7 @@ const PostCard = ({ post }) => {
                 { id && post.User.id === id
                   ? (
                     <>
-                      {!post.RetweetId && <Button>수정</Button>}
+                      {!post.RetweetId && <Button onClick={onClickUpdate}>수정</Button>}
                       <Button type="danger" onClick={onRemovePost} loading={removePostLoading}>삭제</Button>
                     </>
                   )
@@ -109,7 +125,13 @@ const PostCard = ({ post }) => {
                   </Link>
                 )}
                 title={post.Retweet.User.nickname}
-                description={<PostCardContent postData={post.Retweet.content} />}
+                description={(
+                  <PostCardContent
+                    onChangePost={onChangePost}
+                    onCancelUpdatePost={onCancelUpdatePost}
+                    postData={post.Retweet.content}
+                  />
+                )}
               />
             </Card>
           )
@@ -123,7 +145,14 @@ const PostCard = ({ post }) => {
                   </Link>
                 )}
                 title={post.User.nickname}
-                description={<PostCardContent postData={post.content} />}
+                description={(
+                  <PostCardContent
+                    onChangePost={onChangePost}
+                    editMode={editMode}
+                    onCancelUpdatePost={onCancelUpdatePost}
+                    postData={post.content}
+                  />
+                )}
               />
             </>
           )}

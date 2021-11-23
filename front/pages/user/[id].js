@@ -21,11 +21,11 @@ const User = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      console.log(
-        window.scrollY, // 전체 높이 중 y좌표
-        document.documentElement.clientHeight, // 보여지는 창 높이
-        document.documentElement.scrollHeight, // 전체 높이
-      ); // 전체 높이 중 y좌표 + 보여지는 창 높이 > 전체 높이 - 300
+      // console.log(
+      //   window.scrollY, // 전체 높이 중 y좌표
+      //   document.documentElement.clientHeight, // 보여지는 창 높이
+      //   document.documentElement.scrollHeight, // 전체 높이
+      // ); // 전체 높이 중 y좌표 + 보여지는 창 높이 > 전체 높이 - 300
 
       if (window.scrollY + document.documentElement.clientHeight
         > document.documentElement.scrollHeight - 300) {

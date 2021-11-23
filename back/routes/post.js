@@ -267,14 +267,30 @@ router.get('/:postId', async (req, res, next) => { // GET /post/1
   }
 });
 
-router.post('/update', isLoggedIn, async (req, res, next) => { // POST /post/update
+router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/1
   try {
     const post = await Post.findOne({
-      where: { id: req.body.id },
+      where: { id: parseInt(req.params.postId) },
     });
     if (!post) {
       return res.status(403).send('수정할 글이 존재하지 않습니다.');
     }
+
+    await Post.update({
+      content: req.body.content
+    }, {
+      where: { id: post.id, UserId: req.user.id },
+    });
+    
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
+    if (hashtags) {
+      const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+        where: { name: tag.slice(1).toLowerCase() },
+      })));
+      await post.setHashtags(result.map((v) => v[0]));
+    }
+
+    return res.status(200).json({ PostId: parseInt(req.params.postId), content: req.body.content });
   } catch (error) {
     console.error(error);
     next(error);
