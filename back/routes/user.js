@@ -195,41 +195,6 @@ router.get('/followings', isLoggedIn, async (req, res, next) => { // GET /user/f
   }
 });
 
-router.get('/:userId', async (req, res, next) => { // GET /user/1 ----- 와일드카드는 제일 아래로 내려버리자, 파람스에 걸려서 다른 라우터에 접근 안될 수도 있기 때문
-  try {
-    const fullUserWithoutPassword = await User.findOne({
-      where: { id: parseInt(req.params.userId) },
-      attributes: {
-        exclude: ['password']
-      },
-      include: [{
-        model: Post,
-      }, {
-        model: User,
-        as: 'Followings',
-        attributes: ['id']
-      }, {
-        model: User,
-        as: 'Followers',
-        attributes: ['id']
-      }]
-    });
-
-    if (fullUserWithoutPassword) {
-      const data = fullUserWithoutPassword.toJSON(); // 시퀄라이즈에서 보내준 데이터는 json이 아니다, json으로 바꿔서 가공하자
-      data.Posts = data.Posts.length;
-      data.Followings = data.Followings.length;
-      data.Followers = data.Followers.length;
-      res.status(200).json(data);
-    } else {
-      res.status(403).send('존재하지 않는 사용자입니다.');
-    }
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
 router.get('/:userId/posts', async (req, res, next) => { // GET /user/1/posts?lastId=9
   try {
     const user = await User.findOne({
@@ -280,6 +245,41 @@ router.get('/:userId/posts', async (req, res, next) => { // GET /user/1/posts?la
       }]
     });
     return res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/:userId', async (req, res, next) => { // GET /user/1 ----- 와일드카드는 제일 아래로 내려버리자, 파람스에 걸려서 다른 라우터에 접근 안될 수도 있기 때문
+  try {
+    const fullUserWithoutPassword = await User.findOne({
+      where: { id: parseInt(req.params.userId) },
+      attributes: {
+        exclude: ['password']
+      },
+      include: [{
+        model: Post,
+      }, {
+        model: User,
+        as: 'Followings',
+        attributes: ['id']
+      }, {
+        model: User,
+        as: 'Followers',
+        attributes: ['id']
+      }]
+    });
+
+    if (fullUserWithoutPassword) {
+      const data = fullUserWithoutPassword.toJSON(); // 시퀄라이즈에서 보내준 데이터는 json이 아니다, json으로 바꿔서 가공하자
+      data.Posts = data.Posts.length;
+      data.Followings = data.Followings.length;
+      data.Followers = data.Followers.length;
+      res.status(200).json(data);
+    } else {
+      res.status(403).send('존재하지 않는 사용자입니다.');
+    }
   } catch (error) {
     console.error(error);
     next(error);
